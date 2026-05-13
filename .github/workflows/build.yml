@@ -49,9 +49,6 @@ jobs:
           # Copy generated native libraries
           find build-arm64 -name "*.so" -exec cp {} output/arm64-v8a/ \;
 
-          # Copy OpenMP runtime required by libggml-cpu.so
-          cp "$ANDROID_HOME/ndk/27.2.12479018/toolchains/llvm/prebuilt/linux-x86_64/sysroot/usr/lib/aarch64-linux-android/24/libomp.so" output/arm64-v8a/
-
           ls -lh output/arm64-v8a
 
       - name: Zip result
