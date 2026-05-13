@@ -37,8 +37,8 @@ jobs:
             -DBUILD_SHARED_LIBS=ON \
             -DLLAMA_BUILD_TESTS=OFF \
             -DLLAMA_BUILD_EXAMPLES=OFF \
-            -DLLAMA_CURL=OFF
-            -DGGML_OPENMP=OFF \
+            -DLLAMA_CURL=OFF \
+            -DGGML_OPENMP=OFF
 
           cmake --build build-arm64 --target llama_jni --parallel 2
 
