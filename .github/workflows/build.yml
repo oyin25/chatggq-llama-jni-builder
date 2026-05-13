@@ -1,0 +1,59 @@
+name: Build ChatGGQ Llama JNI
+
+on:
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout builder repo
+        uses: actions/checkout@v4
+
+      - name: Install tools
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y cmake ninja-build git zip
+
+      - name: Install Android NDK
+        run: |
+          yes | $ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager "ndk;27.2.12479018" "cmake;3.22.1"
+
+      - name: Clone llama.cpp
+        run: |
+          git clone --depth 1 https://github.com/ggml-org/llama.cpp.git cpp/llama.cpp
+
+      - name: Build arm64-v8a native libraries
+        run: |
+          export ANDROID_NDK_HOME="$ANDROID_HOME/ndk/27.2.12479018"
+
+          cmake -S cpp -B build-arm64 \
+            -G Ninja \
+            -DCMAKE_TOOLCHAIN_FILE=$ANDROID_NDK_HOME/build/cmake/android.toolchain.cmake \
+            -DANDROID_ABI=arm64-v8a \
+            -DANDROID_PLATFORM=android-24 \
+            -DCMAKE_BUILD_TYPE=Release \
+            -DBUILD_SHARED_LIBS=ON \
+            -DLLAMA_BUILD_TESTS=OFF \
+            -DLLAMA_BUILD_EXAMPLES=OFF \
+            -DLLAMA_CURL=OFF
+
+          cmake --build build-arm64 --target llama_jni --parallel 2
+
+      - name: Collect .so files
+        run: |
+          mkdir -p output/arm64-v8a
+          find build-arm64 -name "*.so" -exec cp {} output/arm64-v8a/ \;
+          ls -lh output/arm64-v8a
+
+      - name: Zip result
+        run: |
+          cd output
+          zip -r chatggq-llama-jni-arm64-v8a.zip arm64-v8a
+
+      - name: Upload artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: chatggq-llama-jni-arm64-v8a
+          path: output/chatggq-llama-jni-arm64-v8a.zip
