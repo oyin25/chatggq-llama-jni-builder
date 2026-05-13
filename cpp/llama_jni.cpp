@@ -18,7 +18,7 @@ static std::mutex g_mutex;
 
 extern "C"
 JNIEXPORT jlong JNICALL
-Java_com_lodwickmasete_llms_LlamaEngine_initModel(
+Java_hosted_gemini_LlamaEngine_initModel(
         JNIEnv *env,
         jobject thiz,
         jstring modelPath
@@ -67,7 +67,7 @@ Java_com_lodwickmasete_llms_LlamaEngine_initModel(
 
 extern "C"
 JNIEXPORT void JNICALL
-Java_com_lodwickmasete_llms_LlamaEngine_stopGeneration(
+Java_hosted_gemini_LlamaEngine_stopGeneration(
         JNIEnv *env,
         jobject thiz
 ) {
@@ -76,7 +76,7 @@ Java_com_lodwickmasete_llms_LlamaEngine_stopGeneration(
 
 extern "C"
 JNIEXPORT void JNICALL
-Java_com_lodwickmasete_llms_LlamaEngine_freeModel(
+Java_hosted_gemini_LlamaEngine_freeModel(
         JNIEnv *env,
         jobject thiz
 ) {
@@ -124,7 +124,7 @@ static bool contains_stop_text(const std::string &text, JNIEnv *env, jobjectArra
 
 extern "C"
 JNIEXPORT void JNICALL
-Java_com_lodwickmasete_llms_LlamaEngine_runPromptStreaming(
+Java_hosted_gemini_LlamaEngine_runPromptStreaming(
         JNIEnv *env,
         jobject thiz,
         jstring prompt,
